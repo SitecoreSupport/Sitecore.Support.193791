@@ -4,6 +4,7 @@ using Sitecore.Analytics.Aggregation.Pipeline;
 using Sitecore.Analytics.Model;
 using Sitecore.ContentTesting.Analytics.Aggregation.Data.Model.Facts;
 using Sitecore.ContentTesting.Configuration;
+using Sitecore.Data;
 using Sitecore.Diagnostics;
 
 namespace Sitecore.Support.ContentTesting.Analytics.Aggregation.Pipeline
@@ -28,9 +29,15 @@ namespace Sitecore.Support.ContentTesting.Analytics.Aggregation.Pipeline
               {
                 pages.Add(data2.Item.Id, new List<KeyValuePair<Guid, Guid>>());
               }
+
               List<KeyValuePair<Guid, Guid>> list = pages[data2.Item.Id];
               foreach (PersonalizationRuleData data3 in data2.PersonalizationData.ExposedRules)
               {
+                if (data3.RuleSetId == (ID)null || data3.RuleId == (ID)null)
+                {
+                  continue;
+                }
+
                 RulesExposureKey key = this.GetKey(data2, data3);
                 RulesExposureValue value2 = this.GetValue(data2, data3, visit, pages);
                 fact.Emit(key, value2);
